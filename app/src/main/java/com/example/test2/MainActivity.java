@@ -4,25 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.icu.util.TimeUnit;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 // Google ML Kit Vision API
 import com.google.android.gms.tasks.OnFailureListener;
@@ -71,16 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 dispatchTakePictureIntent();
-                /* OCR 테스트용
-                //AssetManager assetManager = getResources().getAssets();
-                InputStream is;
-                Bitmap bitmap = null;
-                try {
-                  is = assetManager.open("barcode3.png");
-                  bitmap = BitmapFactory.decodeStream(is);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
             }
         });
     }
