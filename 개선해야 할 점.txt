@@ -1,0 +1,8 @@
+-프로젝트 이름 변경
+ -ex) POS_Android_Number
+ -ex) POS_C#_Server
+
+-DB 연결시 사용하는 계정 정보 하드코딩 X (보안)
+
+-SQL Injection 방지 (보안)
+ -C# MySQL prepared statements

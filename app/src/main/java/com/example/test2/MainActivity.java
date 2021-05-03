@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,7 +21,10 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +40,9 @@ import com.google.mlkit.vision.text.TextRecognizer;
 // Google CameraX API
 import androidx.core.content.FileProvider;
 
+// 소켓 클라이언트 관련
+import android.os.Handler;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView textView;
@@ -47,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
     String mCurrentPhotoPath;
 
+    String product_id;
+
+    Handler handler = new Handler();
+
+    List<Text.Element> elements;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +68,21 @@ public class MainActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         imageView = (ImageView) findViewById(R.id.imageView);
 
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button button1 = (Button) findViewById(R.id.button1);
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
                 dispatchTakePictureIntent();
+            }
+        });
+
+        Button button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClientThread thread = new ClientThread();
+                thread.start();
             }
         });
     }
@@ -171,16 +193,20 @@ public class MainActivity extends AppCompatActivity {
                                 public void onSuccess(Text texts) {
                                     // 성공
                                     textView.setText("");
+                                    product_id = "";
+                                    elements = new ArrayList<>();
                                     List<Text.TextBlock> blocks = texts.getTextBlocks();
                                     for (int i = 0; i < blocks.size(); i++) {
                                         List<Text.Line> lines = blocks.get(i).getLines();
                                         for (int j = 0; j < lines.size(); j++) {
-                                            List<Text.Element> elements = lines.get(j).getElements();
+                                            elements = lines.get(j).getElements();
                                             for (int k = 0; k < elements.size(); k++) {
-                                                textView.append(elements.get(k).getText());
+                                                //textView.append(elements.get(k).getText());
+                                                product_id += elements.get(k).getText();
                                             }
                                         }
                                     }
+                                    textView.setText(product_id);
                                 }
                             })
                     .addOnFailureListener(
@@ -191,6 +217,40 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             });
+        }
+    }
+
+    // 소켓 클라이언트 스레드
+    class ClientThread extends Thread {
+        public void run() {
+            InputStream dataInputStream;
+            OutputStream dataOutputStream;
+            Socket socket;
+            String ip = "172.30.1.35";
+            int port = 3333;
+
+            try {
+                socket = new Socket(ip, port);
+                dataInputStream = socket.getInputStream();
+                dataOutputStream = socket.getOutputStream();
+
+                // 서버로 데이터 주기
+                byte[] inst = product_id.getBytes();
+                //byte[] inst = "Hello".getBytes();
+                dataOutputStream.write(inst);
+                Log.d("ClientThread", "서버로 보냄");
+
+                // 서버에서 부터 온 데이터 받기
+                byte[] buffer = new byte[1024];
+                int bytes;
+                bytes = dataInputStream.read(buffer);
+                String tmp = new String(buffer, 0, bytes);
+                Log.d("ClientThread", "받은 데이터 " + tmp);
+
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

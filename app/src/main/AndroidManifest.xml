@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.test2">
 
+    <!-- 카메라 촬영 관련 부분 -->
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera"
@@ -16,6 +16,8 @@
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
 
+    <!-- 소켓 클라이언트 관련 부분 -->
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
         android:allowBackup="true"
