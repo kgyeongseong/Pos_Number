@@ -1,7 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
+<<<<<<< HEAD
         maven { url rootProject.projectDir.getAbsolutePath() + '/libraries' }
+=======
+>>>>>>> 55bc85e3091ac0ffeec853f9407ab3a17e999482
         google()
         jcenter()
     }
@@ -15,7 +18,10 @@ buildscript {
 
 allprojects {
     repositories {
+<<<<<<< HEAD
         maven { url rootProject.projectDir.getAbsolutePath() + '/libraries' }
+=======
+>>>>>>> 55bc85e3091ac0ffeec853f9407ab3a17e999482
         google()
         jcenter()
     }
