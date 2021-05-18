@@ -1,0 +1,6 @@
+include ':app'
+<<<<<<< HEAD
+rootProject.name = "test2"
+=======
+rootProject.name = "pos"
+>>>>>>> 55bc85e3091ac0ffeec853f9407ab3a17e999482
